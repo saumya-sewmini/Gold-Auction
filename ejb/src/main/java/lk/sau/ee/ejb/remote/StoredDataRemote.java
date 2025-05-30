@@ -5,6 +5,7 @@ import lk.sau.ee.core.model.UserModel;
 
 import java.util.List;
 
-public interface UserRemote {
-
+@Remote
+public interface StoredDataRemote {
+    public List<UserModel> getAllUsers();
 }

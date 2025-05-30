@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lk.sau.ee.core.model.UserModel;
-import lk.sau.ee.ejb.remote.UserRemote;
+import lk.sau.ee.ejb.remote.StoredDataRemote;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
 public class SigninServlet extends HttpServlet {
 
     @EJB
-    private UserRemote userRemote;
+    private StoredDataRemote storedDataRemote;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -28,7 +28,7 @@ public class SigninServlet extends HttpServlet {
         System.out.println("Received email:" +email);
         System.out.println("Received password:" +password);
 
-        List<UserModel> users = userRemote.getAllUsers();
+        List<UserModel> users = storedDataRemote.getAllUsers();
         System.out.println("Users in system:");
 
         for (UserModel user : users) {

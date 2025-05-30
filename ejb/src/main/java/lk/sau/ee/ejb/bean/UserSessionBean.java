@@ -7,15 +7,6 @@ import lk.sau.ee.ejb.remote.UserRemote;
 import java.util.ArrayList;
 import java.util.List;
 
-@Stateless
-public class UserSessionBean implements UserRemote {
+public class UserSessionBean{
 
-    @Override
-    public List<UserModel> getAllUsers() {
-        return List.of(
-                new UserModel("sau@gmail.com", "123456"),
-                new UserModel("sameera@gmail.com", "456789"),
-                new UserModel("shashika@gmail.com", "785469")
-        );
-    }
 }
