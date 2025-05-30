@@ -183,7 +183,7 @@
         }
     </style>
 </head>
-<body>
+<body onload="loadProducts();">
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white">
@@ -231,69 +231,13 @@
     <div class="container">
         <h2 class="section-title">Live Auctions</h2>
 
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="productContainer-box">
+
+
             <!-- Auction Item 1 -->
-            <div class="col">
-                <div class="auction-card">
-                    <img src="images/ring2.jpg" class="card-img-top" alt="Gold Necklace">
-                    <div class="card-body">
-                        <h5 class="card-title">Eternal Brilliance Ring</h5>
-                        <div class="auction-meta">
-                            <span class="current-bid">$2,300</span>
-                            <span class="time-left">
-                  <i class="fas fa-clock me-1"></i>2h 15m
-                </span>
-                        </div>
-                        <div class="d-flex justify-content-between mb-3">
-                            <small>Bids: 12</small>
-                            <small>Min increment: $50</small>
-                        </div>
-                        <button class="bid-btn">Place Bid</button>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Auction Item 2 -->
-            <div class="col">
-                <div class="auction-card">
-                    <img src="images/ring1.jpg" class="card-img-top" alt="Gold Ring">
-                    <div class="card-body">
-                        <h5 class="card-title">Harmonic Serenity Ring</h5>
-                        <div class="auction-meta">
-                            <span class="current-bid">$1,950</span>
-                            <span class="time-left">
-                  <i class="fas fa-clock me-1"></i>1h 30m
-                </span>
-                        </div>
-                        <div class="d-flex justify-content-between mb-3">
-                            <small>Bids: 8</small>
-                            <small>Min increment: $25</small>
-                        </div>
-                        <button class="bid-btn">Place Bid</button>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Auction Item 3 -->
-            <div class="col">
-                <div class="auction-card">
-                    <img src="images/earrings1.jpg" class="card-img-top" alt="Gold Bracelet">
-                    <div class="card-body">
-                        <h5 class="card-title">Stellar Voyage Earrings</h5>
-                        <div class="auction-meta">
-                            <span class="current-bid">$1,675</span>
-                            <span class="time-left">
-                  <i class="fas fa-clock me-1"></i>3h 45m
-                </span>
-                        </div>
-                        <div class="d-flex justify-content-between mb-3">
-                            <small>Bids: 5</small>
-                            <small>Min increment: $30</small>
-                        </div>
-                        <button class="bid-btn">Place Bid</button>
-                    </div>
-                </div>
-            </div>
+
         </div>
 
         <div class="text-center mt-5">

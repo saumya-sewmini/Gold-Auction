@@ -53,3 +53,72 @@ signinForm.addEventListener('submit',async function(e){
     }
     signinForm.reset();
 })
+
+function getTimeLeft(date) {
+    const endTime = new Date(date).getTime();
+    const now = Date.now();
+    const diff = endTime - now;
+
+    if (diff <= 0) return "Ended";
+
+    const minutes = Math.floor((diff / 1000 / 60) % 60);
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+
+    return `${hours}h ${minutes}m`;
+}
+
+//load product
+async function loadProducts() {
+    try {
+        const response = await fetch("/ee-app/home");
+        const products = await response.json();
+
+        console.log("Products received:", products);
+        alert("Products loaded: " + products.length);
+
+        const productContainer = document.getElementById("productContainer-box");
+        if (!productContainer) {
+            alert("productContainer not found!");
+            return;
+        }
+
+        if (products.length === 0){
+            alert("No products found");
+            return;
+        }
+
+        products.forEach(product => {
+            console.log("Adding Product:", product);
+
+            const card = document.createElement("div");
+            card.className = "col";
+            card.innerHTML = `
+                <div class="auction-card">
+                    <img src="${product.image}" class="card-img-top" alt="Gold Necklace">
+                    <div class="card-body">
+                        <h5 class="card-title">${product.name}</h5>
+                        <div class="auction-meta">
+                            <span class="current-bid">Rs. ${product.maxBidPrice.toFixed(2)}</span>
+                            <span class="time-left">
+                  <i class="fas fa-clock me-1"></i>${getTimeLeft(product.date)}
+                </span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <small>Bids: ${product.bidderQty}</small>
+                            <small>Min increment: $50</small>
+                        </div>
+                        <button class="bid-btn">Place Bid</button>
+                    </div>
+                </div>
+            `;
+
+            productContainer.appendChild(card);
+
+        });
+
+        alert("Products loaded");
+    }catch (error) {
+        console.error("Error loading products:", error);
+        alert("Failed to load products");
+    }
+}
