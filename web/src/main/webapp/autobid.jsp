@@ -161,7 +161,7 @@
         }
     </style>
 </head>
-<body>
+<body onload="autoBidLoad();">
 <div class="container">
     <div class="auth-container">
         <!-- Header -->

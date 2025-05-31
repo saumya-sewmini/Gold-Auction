@@ -38,7 +38,7 @@ signinForm.addEventListener('submit',async function(e){
 
         const responseText = await response.text();
         console.log("Raw response from server:", responseText);
-        alert("Raw response: [" + responseText + "]");
+        // alert("Raw response: [" + responseText + "]");
 
         if (responseText.trim() === "success") {
             alert("Login successful");
@@ -67,14 +67,14 @@ function getTimeLeft(date) {
     return `${hours}h ${minutes}m`;
 }
 
-//load product
+//load product to home
 async function loadProducts() {
     try {
         const response = await fetch("/ee-app/home");
         const products = await response.json();
 
         console.log("Products received:", products);
-        alert("Products loaded: " + products.length);
+        // alert("Products loaded: " + products.length);
 
         const productContainer = document.getElementById("productContainer-box");
         if (!productContainer) {
@@ -107,7 +107,7 @@ async function loadProducts() {
                             <small>Bids: ${product.bidderQty}</small>
                             <small>Min increment: $50</small>
                         </div>
-                        <button class="bid-btn">Place Bid</button>
+                        <button class="bid-btn" onclick="window.location.href='singleproductview.jsp?id=${product.id}'">Place Bid</button>
                     </div>
                 </div>
             `;
@@ -116,9 +116,47 @@ async function loadProducts() {
 
         });
 
-        alert("Products loaded");
+        // alert("Products loaded");
     }catch (error) {
         console.error("Error loading products:", error);
         alert("Failed to load products");
     }
 }
+
+async function loadSingleProduct(id) {
+    const param = new URLSearchParams(window.location.search);
+
+    if (!param.has("id")) {
+        alert("No product id found");
+        return;
+    }
+
+    const productId = param.get("id");
+
+    try {
+        const response = await fetch("/ee-app/singleproductview?id=" + productId);
+
+        if (!response.ok){
+            throw new Error("Failed to fetch product");
+        }
+
+        const json = await response.json();
+        console.log("Product received:", json);
+
+        const id = json.id;
+        const title = json.name;
+
+        document.getElementById("productTitle").innerHTML = title;
+        document.getElementById("maxBitAmount").innerHTML = json.maxBidPrice;
+        document.getElementById("bidAmount").innerHTML = json.maxBidPrice + 50;
+        document.getElementById("minimumNextBitAmount").innerHTML = json.maxBidPrice + 50;
+        document.getElementById("mainImage").src = json.image;
+        document.getElementById("countDownSpan").innerHTML = getTimeLeft(json.date);
+        document.getElementById("singleProductDescription").innerHTML = json.description;
+
+    }catch (error) {
+        console.error("Error loading product:", error);
+        alert("Failed to load product");
+    }
+}
+

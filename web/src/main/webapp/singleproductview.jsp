@@ -155,15 +155,14 @@
     }
   </style>
 </head>
-<body>
+<body onload="loadSingleProduct();">
 
 <!-- Product Header -->
 <section class="product-header">
   <div class="container">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.jsp">Home</a></li>
-        <li class="breadcrumb-item"><a href="#">Necklaces</a></li>
+        <li class="breadcrumb-item"><a href="home.jsp">Home</a></li>
         <li class="breadcrumb-item active" aria-current="page">Eternal Brilliance Necklace</li>
       </ol>
     </nav>
@@ -183,14 +182,14 @@
 
       <!-- Product Details -->
       <div class="col-lg-6">
-        <h1 class="product-title">Eternal Brilliance Gold Necklace</h1>
+        <h1 class="product-title" id="productTitle">Eternal Brilliance Gold Necklace</h1>
         <div class="d-flex align-items-center mb-3">
           <div class="me-3">
-            <span class="product-price">$2,300</span>
+            <span class="product-price" id="maxBitAmount">$2,300</span>
             <small class="d-block text-muted">Current Bid</small>
           </div>
           <div class="countdown">
-            <i class="fas fa-clock me-3"></i> <span >02:15:36</span>
+            <i class="fas fa-clock me-3"></i> <span id="countDownSpan">02:15:36</span>
           </div>
         </div>
 
@@ -203,9 +202,9 @@
             <div class="bid-amount-input">
               <div class="input-group">
                 <span class="input-group-text">$</span>
-                <input type="number" class="form-control mb-2" id="bidAmount" placeholder="Enter amount" min="2350" step="50" value="2350">
+                <input type="number" class="form-control mb-2" id="bidAmount" placeholder="Enter amount" step="50">
               </div>
-              <small class="text-muted">Minimum next bid: $2,350</small>
+              <small class="text-muted">Minimum next bid: <label id="minimumNextBitAmount">$2,350</label></small>
             </div>
           </div>
 
@@ -271,21 +270,19 @@
         <div class="row">
           <div class="col-md-6">
             <h5 class="mb-3">Product Description</h5>
-            <p>This exquisite 18K gold necklace features a timeless design with brilliant-cut diamonds. Handcrafted by master jewelers, it's a perfect blend of tradition and modern elegance.</p>
-            <ul class="product-specs list-unstyled">
-              <li><strong>Material:</strong> 18K Yellow Gold</li>
-              <li><strong>Weight:</strong> 12.5 grams</li>
-              <li><strong>Length:</strong> 18 inches</li>
-              <li><strong>Clasp:</strong> Lobster clasp</li>
-            </ul>
+            <p id="singleProductDescription">This exquisite 18K gold necklace features a timeless design with brilliant-cut diamonds. Handcrafted by master jewelers, it's a perfect blend of tradition and modern elegance.</p>
+<%--            <ul class="product-specs list-unstyled">--%>
+<%--              <li><strong>Material:</strong> 18K Yellow Gold</li>--%>
+<%--              <li><strong>Weight:</strong> 12.5 grams</li>--%>
+<%--              <li><strong>Length:</strong> 18 inches</li>--%>
+<%--              <li><strong>Clasp:</strong> Lobster clasp</li>--%>
+<%--            </ul>--%>
           </div>
           <div class="col-md-6">
             <h5 class="mb-3">Auction Details</h5>
             <ul class="product-specs list-unstyled">
-              <li><strong>Starting Bid:</strong> $2,000</li>
+              <li id="startBid"><strong>Starting Bid:</strong> $2,000</li>
               <li><strong>Bid Increment:</strong> $50</li>
-              <li><strong>Started:</strong> June 15, 2023</li>
-              <li><strong>Ends:</strong> June 22, 2023</li>
             </ul>
           </div>
         </div>
@@ -315,30 +312,7 @@
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  // Countdown timer (demo)
-  function startCountdown() {
-    let time = 2 * 60 * 60 + 15 * 60 + 36; // 2h 15m 36s
-    const timer = setInterval(() => {
-      const hours = Math.floor(time / 3600).toString().padStart(2, '0');
-      const minutes = Math.floor((time % 3600) / 60).toString().padStart(2, '0');
-      const seconds = (time % 60).toString().padStart(2, '0');
+<script src="js/script.js"></script>
 
-      document.getElementById('auctionTimer').textContent = `${hours}:${minutes}:${seconds}`;
-
-      if (time <= 0) {
-        clearInterval(timer);
-        document.getElementById('auctionTimer').textContent = "Auction Ended";
-      } else {
-        time--;
-      }
-    }, 1000);
-  }
-
-  // Initialize
-  window.onload = function() {
-    startCountdown();
-  };
-</script>
 </body>
 </html>
