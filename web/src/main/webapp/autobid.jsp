@@ -199,16 +199,16 @@
                     </div>
 
                     <!-- Bid Increment -->
-                    <div class="mt-4">
-                        <label class="form-label fw-bold">Bid Increment</label>
-                        <select class="form-select" id="bidIncrement">
-                            <option value="50">$50 (Minimum)</option>
-                            <option value="100">$100</option>
-                            <option value="250">$250</option>
-                            <option value="500">$500</option>
-                            <option value="custom">Custom Amount</option>
-                        </select>
-                    </div>
+<%--                    <div class="mt-4">--%>
+<%--                        <label class="form-label fw-bold">Bid Increment</label>--%>
+<%--                        <select class="form-select" id="bidIncrement">--%>
+<%--                            <option value="50">$50 (Minimum)</option>--%>
+<%--                            <option value="100">$100</option>--%>
+<%--                            <option value="250">$250</option>--%>
+<%--                            <option value="500">$500</option>--%>
+<%--                            <option value="custom">Custom Amount</option>--%>
+<%--                        </select>--%>
+<%--                    </div>--%>
 
                     <!-- Custom Increment (Hidden by Default) -->
                     <div class="mt-3" id="customIncrementContainer" style="display: none;">

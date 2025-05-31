@@ -153,6 +153,29 @@
         height: 300px;
       }
     }
+
+    #autoBidSection .bid-info-card {
+      border: 2px solid var(--light-gold);
+      background-color: #fffdf6;
+    }
+
+    .btn-gold {
+      background-color: var(--gold);
+      color: white;
+      border: none;
+      transition: all 0.3s;
+    }
+
+    .btn-gold:hover {
+      background-color: var(--dark-gold);
+      transform: translateY(-2px);
+    }
+
+    #autoBidForm .form-control:focus,
+    #autoBidForm .form-select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+    }
   </style>
 </head>
 <body onload="loadSingleProduct();">
@@ -163,7 +186,6 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="home.jsp">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Eternal Brilliance Necklace</li>
       </ol>
     </nav>
   </div>
@@ -211,9 +233,6 @@
           <div class="d-grid gap-2">
             <button class="btn btn-bid-now">
               <i class="fas fa-hammer me-2"></i>Place Bid Now
-            </button>
-            <button class="btn btn-outline-secondary">
-              <i class="fas fa-bolt me-2"></i>Set Auto-Bid
             </button>
           </div>
         </div>
@@ -306,6 +325,68 @@
           <li>Refund processed within 5 business days</li>
           <li>No returns on customized items</li>
         </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pb-5" id="autoBidSection">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="bid-info-card">
+          <div class="d-flex align-items-center mb-4">
+            <i class="fas fa-bolt me-3" style="color: var(--gold); font-size: 1.5rem;"></i>
+            <h3 class="mb-0">Auto-Bid Setup</h3>
+          </div>
+
+          <div class="alert alert-warning mb-4">
+            <i class="fas fa-info-circle me-2"></i>
+            The system will automatically place bids for you up to your maximum amount.
+          </div>
+
+          <form id="autoBidForm">
+            <div class="mb-4">
+              <label class="form-label fw-bold">Maximum Bid Amount</label>
+              <div class="input-group">
+                <span class="input-group-text bg-white border-end-0">
+                  <i class="fas fa-dollar-sign"></i>
+                </span>
+                <input type="number"
+                       class="form-control border-start-0"
+                       id="autoBidMaxAmount"
+                       placeholder="Enter maximum amount"
+                       min="2350"
+                       step="50"
+                       required>
+              </div>
+              <small class="text-muted">This is the highest amount you're willing to pay</small>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-bold">Bid Increment</label>
+              <select class="form-select" id="autoBidIncrement" required>
+                <option value="50">$50</option>
+<%--                <option value="100">$100</option>--%>
+<%--                <option value="250">$250</option>--%>
+<%--                <option value="500">$500</option>--%>
+              </select>
+            </div>
+
+            <div class="form-check mb-4">
+              <input class="form-check-input" type="checkbox" id="autoBidTerms" required>
+              <label class="form-check-label" for="autoBidTerms">
+                I understand this will automatically place bids on my behalf
+              </label>
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-gold py-3 fw-bold">
+                <i class="fas fa-robot me-2"></i> Activate Auto-Bidding
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
