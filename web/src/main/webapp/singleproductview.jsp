@@ -238,32 +238,15 @@
         </div>
 
         <!-- Bid History -->
-        <div class="bid-info-card">
+        <div class="bid-info-card" >
           <h5 class="mb-3"><i class="fas fa-history me-2"></i>Bid History</h5>
-          <div class="bid-history">
-            <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
-              <div>
-                <strong>User123</strong>
-                <small class="text-muted ms-2">Today, 14:30</small>
-              </div>
-              <span class="text-success">$2,300</span>
-            </div>
-            <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
-              <div>
-                <strong>GoldLover</strong>
-                <small class="text-muted ms-2">Today, 13:45</small>
-              </div>
-              <span class="text-success">$2,250</span>
-            </div>
-            <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
-              <div>
-                <strong>JewelCollector</strong>
-                <small class="text-muted ms-2">Today, 12:20</small>
-              </div>
-              <span class="text-success">$2,200</span>
-            </div>
+          <div class="bid-history" id="bidHistory">
+
+
+
           </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -300,7 +283,7 @@
           <div class="col-md-6">
             <h5 class="mb-3">Auction Details</h5>
             <ul class="product-specs list-unstyled">
-              <li id="startBid"><strong>Starting Bid:</strong> $2,000</li>
+              <li><strong>Starting Bid:</strong> <label id="startBid">$1000</label></li>
               <li><strong>Bid Increment:</strong> $50</li>
             </ul>
           </div>

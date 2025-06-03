@@ -1,11 +1,6 @@
 package lk.sau.ee.web.servlet;
 
-import com.google.gson.Gson;
-import jakarta.annotation.Resource;
 import jakarta.ejb.EJB;
-import jakarta.inject.Inject;
-import jakarta.jms.JMSContext;
-import jakarta.jms.Topic;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -30,6 +25,8 @@ public class BidServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        response.setContentType("text/plain");
 
         String productIdParam = request.getParameter("itemId");
         String amountParam = request.getParameter("amount");
@@ -59,6 +56,7 @@ public class BidServlet extends HttpServlet {
 
             if (amount <= currentMaxBid) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bid amount must be greater than current max bid");
+
                 return;
             }
 
@@ -69,6 +67,13 @@ public class BidServlet extends HttpServlet {
 
             //bid create and send
             BidModel bidModel = new BidModel(user.getId(), itemId, amount);
+
+            //save bid to memory + broadcast
+            bidManagerRemote.addBid(bidModel);
+            System.out.println("Bid sent to memory");
+
+            storedDataRemote.getProductById(itemId).setMaxBidPrice(amount);
+            System.out.println("Product maxBidPrice updated to: " + amount);
 
             //success response
             response.setStatus(HttpServletResponse.SC_OK);

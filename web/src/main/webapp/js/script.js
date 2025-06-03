@@ -123,6 +123,7 @@ async function loadProducts() {
     }
 }
 
+//load single product
 async function loadSingleProduct(id) {
     const param = new URLSearchParams(window.location.search);
 
@@ -160,6 +161,7 @@ async function loadSingleProduct(id) {
     }
 }
 
+//placeBid
 async function placeBid(id){
     // alert("Bid placed");
 
@@ -195,5 +197,63 @@ async function placeBid(id){
         alert("Bid submitted!");
     }else {
         alert("Failed to submit bid!");
+    }
+}
+
+//websocket
+const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+const socket = new WebSocket(`${protocol}${window.location.host}/ee-app/bidsocket`);
+
+socket.onmessage = function (event) {
+    try {
+
+        const bid = JSON.parse(event.data);
+        console.log("Bid received:", bid);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentProductId = urlParams.get("id");
+
+        // Only process bids for the currently viewed product
+        if (parseInt(currentProductId) !== bid.itemId) {
+            console.log(`Ignoring bid for product ${bid.itemId}, viewing ${currentProductId}`);
+            return;
+        }
+
+        updateBidDisplay(bid);
+        addBidToHistory(bid);
+        updateMinimumBid(bid.amount);
+
+    } catch (error) {
+        console.error("Error handling WebSocket message:", error);
+    }
+};
+
+function updateBidDisplay(bid) {
+    const currentBidElem = document.getElementById("maxBitAmount");
+    if (currentBidElem) {
+        currentBidElem.textContent = `Rs. ${bid.amount.toFixed(2)}`;
+    }
+}
+
+function addBidToHistory(bid) {
+    const bidHistoryElem = document.getElementById("bidHistory");
+    if (bidHistoryElem) {
+        const entry = document.createElement("div");
+        entry.className = "d-flex justify-content-between border-bottom pb-2 mb-2";
+        entry.innerHTML = `
+            <div>
+                <strong>User ${bid.userId}</strong>
+                <small class="text-muted ms-2">Just Now</small>
+            </div>
+            <span class="text-success">Rs. ${bid.amount.toFixed(2)}</span>
+        `;
+        bidHistoryElem.prepend(entry); // Add to top of history
+    }
+}
+
+function updateMinimumBid(currentAmount) {
+    const bidInput = document.getElementById("bidAmountInput");
+    if (bidInput) {
+        bidInput.value = (currentAmount + 50).toFixed(2);
     }
 }
