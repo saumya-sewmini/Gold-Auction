@@ -33,6 +33,12 @@
             <version>1.0</version>
             <type>ejb-client</type>
         </dependency>
+        <dependency>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>11.0.0-M1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

@@ -224,14 +224,14 @@
             <div class="bid-amount-input">
               <div class="input-group">
                 <span class="input-group-text">$</span>
-                <input type="number" class="form-control mb-2" id="bidAmount" placeholder="Enter amount" step="50">
+                <input type="number" class="form-control mb-2" id="bidAmountInput" placeholder="Enter amount" step="50">
               </div>
               <small class="text-muted">Minimum next bid: <label id="minimumNextBitAmount">$2,350</label></small>
             </div>
           </div>
 
           <div class="d-grid gap-2">
-            <button class="btn btn-bid-now">
+            <button class="btn btn-bid-now" onclick="placeBid();">
               <i class="fas fa-hammer me-2"></i>Place Bid Now
             </button>
           </div>

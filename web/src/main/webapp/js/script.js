@@ -148,7 +148,7 @@ async function loadSingleProduct(id) {
 
         document.getElementById("productTitle").innerHTML = title;
         document.getElementById("maxBitAmount").innerHTML = json.maxBidPrice;
-        document.getElementById("bidAmount").innerHTML = json.maxBidPrice + 50;
+        document.getElementById("bidAmountInput").innerHTML = json.maxBidPrice + 50;
         document.getElementById("minimumNextBitAmount").innerHTML = json.maxBidPrice + 50;
         document.getElementById("mainImage").src = json.image;
         document.getElementById("countDownSpan").innerHTML = getTimeLeft(json.date);
@@ -160,3 +160,40 @@ async function loadSingleProduct(id) {
     }
 }
 
+async function placeBid(id){
+    // alert("Bid placed");
+
+    const input = document.getElementById("bidAmountInput");
+
+    if (!input || input.value.trim() === ""){
+        alert("Please enter bid amount");
+        return;
+    }
+
+    const amount = input.value.trim();
+
+    console.log("Amount:", amount);
+
+    const param = new URLSearchParams(window.location.search);
+    const itemId = param.get("id");
+
+    const formData = new URLSearchParams();
+    formData.append("amount", amount);
+    formData.append("itemId", itemId);
+
+    console.log(itemId, amount);
+
+    const response = await fetch("/ee-app/bid", {
+       method: "POST",
+       headers: {"Content-Type": "application/x-www-form-urlencoded"},
+       body: formData
+    });
+
+    console.log("Fetch response:", response);
+
+    if (response.ok){
+        alert("Bid submitted!");
+    }else {
+        alert("Failed to submit bid!");
+    }
+}
