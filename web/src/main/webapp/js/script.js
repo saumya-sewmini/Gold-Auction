@@ -159,6 +159,92 @@ async function loadSingleProduct(id) {
         console.error("Error loading product:", error);
         alert("Failed to load product");
     }
+
+    //websocket
+    const socket = new WebSocket(`ws://${window.location.host}/ee-app/bidSocket`);
+
+    socket.onopen = () => {
+        console.log("Connected to WebSocket");
+    };
+
+    socket.onmessage = (event) => {
+
+        console.log("Received message:", event.data);
+
+        const json = JSON.parse(event.data);
+
+        if (json.type === "singleBid") {
+
+            //handle single bid
+            const bid = json.data;
+            itemId = bid.item;
+            if (productId == itemId) {
+                console.log("Single bid received:", bid);
+                console.log("product id:", bid.item);
+                console.log("user id:", bid.user);
+                console.log("amount:", bid.amount);
+                document.getElementById("maxBitAmount").innerText = bid.amount;
+            }
+
+        }else if (json.type === "allBids") {
+
+            if (productId == itemId) {
+
+                //handle bid list
+                const bids = json.data;
+                console.log("Bid list received, size:", bids.length);
+
+                bids.forEach((bid, index) => {
+                    console.log("Bid:", bid);
+                });
+
+                const size = bids.length;
+                document.getElementById("bidCount").textContent = size;
+
+                const bidList = document.getElementById("bidList");
+                bidList.innerHTML = "";
+                bids.slice().reverse().forEach(bid => {
+                    const li = document.createElement("li");
+                    const nowTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+
+                    if (bid.user == 1) {
+                        li.innerHTML =
+                            `<div>
+                            <strong>User ${bid.user}</strong>
+                            <small className="text-muted ms-2">${bid.dateTime}</small>
+                        </div>
+                        <span className="text-success">$ ${bid.amount}</span>`
+                    }else if(bid.user == 2) {
+                        li.innerHTML =
+                            `<div>
+                           <strong>User ${bid.user}</strong>
+                           <small className="text-muted ms-2">${bid.dateTime}</small>
+                       </div>
+                       <span className="text-success">$ ${bid.amount}</span>`
+                    }else {
+                        li.innerHTML =
+                            `<div>
+                           <strong>User ${bid.user}</strong>
+                           <small className="text-muted ms-2">${bid.dateTime}</small>
+                       </div>
+                       <span className="text-success">$ ${bid.amount}</span>`
+                    }
+                    bidList.appendChild(li);
+                });
+
+            }
+
+        }
+
+    };
+
+    socket.onerror = (error) => {
+        console.error("WebSocket error:", error);
+    };
+
+    socket.onclose = () => {
+        console.log("WebSocket connection closed");
+    };
 }
 
 //placeBid
@@ -200,60 +286,3 @@ async function placeBid(id){
     }
 }
 
-//websocket
-const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-const socket = new WebSocket(`${protocol}${window.location.host}/ee-app/bidsocket`);
-
-socket.onmessage = function (event) {
-    try {
-
-        const bid = JSON.parse(event.data);
-        console.log("Bid received:", bid);
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const currentProductId = urlParams.get("id");
-
-        // Only process bids for the currently viewed product
-        if (parseInt(currentProductId) !== bid.itemId) {
-            console.log(`Ignoring bid for product ${bid.itemId}, viewing ${currentProductId}`);
-            return;
-        }
-
-        updateBidDisplay(bid);
-        addBidToHistory(bid);
-        updateMinimumBid(bid.amount);
-
-    } catch (error) {
-        console.error("Error handling WebSocket message:", error);
-    }
-};
-
-function updateBidDisplay(bid) {
-    const currentBidElem = document.getElementById("maxBitAmount");
-    if (currentBidElem) {
-        currentBidElem.textContent = `Rs. ${bid.amount.toFixed(2)}`;
-    }
-}
-
-function addBidToHistory(bid) {
-    const bidHistoryElem = document.getElementById("bidHistory");
-    if (bidHistoryElem) {
-        const entry = document.createElement("div");
-        entry.className = "d-flex justify-content-between border-bottom pb-2 mb-2";
-        entry.innerHTML = `
-            <div>
-                <strong>User ${bid.userId}</strong>
-                <small class="text-muted ms-2">Just Now</small>
-            </div>
-            <span class="text-success">Rs. ${bid.amount.toFixed(2)}</span>
-        `;
-        bidHistoryElem.prepend(entry); // Add to top of history
-    }
-}
-
-function updateMinimumBid(currentAmount) {
-    const bidInput = document.getElementById("bidAmountInput");
-    if (bidInput) {
-        bidInput.value = (currentAmount + 50).toFixed(2);
-    }
-}

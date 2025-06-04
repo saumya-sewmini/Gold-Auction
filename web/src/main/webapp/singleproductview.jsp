@@ -240,7 +240,7 @@
         <!-- Bid History -->
         <div class="bid-info-card" >
           <h5 class="mb-3"><i class="fas fa-history me-2"></i>Bid History</h5>
-          <div class="bid-history" id="bidHistory">
+          <div class="bid-history" id="bidList">
 
 
 
