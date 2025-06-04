@@ -1,5 +1,6 @@
 package lk.sau.ee.web.servlet;
 
+import com.google.gson.Gson;
 import jakarta.ejb.EJB;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -9,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lk.sau.ee.core.model.BidModel;
 import lk.sau.ee.core.model.UserModel;
+import lk.sau.ee.core.websocket.BidBroadcaster;
 import lk.sau.ee.ejb.remote.BidManagerRemote;
 import lk.sau.ee.ejb.remote.StoredDataRemote;
 
@@ -56,7 +58,6 @@ public class BidServlet extends HttpServlet {
 
             if (amount <= currentMaxBid) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bid amount must be greater than current max bid");
-
                 return;
             }
 
@@ -74,6 +75,10 @@ public class BidServlet extends HttpServlet {
 
             storedDataRemote.getProductById(itemId).setMaxBidPrice(amount);
             System.out.println("Product maxBidPrice updated to: " + amount);
+
+            String bidJson = new Gson().toJson(bidModel);
+            BidBroadcaster.broadcast(bidJson);
+            System.out.println("Broadcasted bid to WebSocket: " + bidJson);
 
             //success response
             response.setStatus(HttpServletResponse.SC_OK);

@@ -10,6 +10,7 @@ import jakarta.jms.ConnectionFactory;
 import jakarta.jms.JMSContext;
 import jakarta.jms.Topic;
 import lk.sau.ee.core.model.BidModel;
+import lk.sau.ee.core.websocket.BidBroadcaster;
 import lk.sau.ee.ejb.remote.BidManagerRemote;
 import lk.sau.ee.ejb.remote.StoredDataRemote;
 

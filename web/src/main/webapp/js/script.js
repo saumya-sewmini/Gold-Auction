@@ -169,82 +169,58 @@ async function loadSingleProduct(id) {
 
     socket.onmessage = (event) => {
 
-        console.log("Received message:", event.data);
+        try {
 
-        const json = JSON.parse(event.data);
+            console.log("Received message:", event.data);
 
-        if (json.type === "singleBid") {
+            const bid = JSON.parse(event.data);
+            const productId = new URLSearchParams(window.location.search).get("id");
 
-            //handle single bid
-            const bid = json.data;
-            itemId = bid.item;
-            if (productId == itemId) {
-                console.log("Single bid received:", bid);
-                console.log("product id:", bid.item);
-                console.log("user id:", bid.user);
-                console.log("amount:", bid.amount);
-                document.getElementById("maxBitAmount").innerText = bid.amount;
-            }
+            if (bid.itemId != productId) {
 
-        }else if (json.type === "allBids") {
-
-            if (productId == itemId) {
-
-                //handle bid list
-                const bids = json.data;
-                console.log("Bid list received, size:", bids.length);
-
-                bids.forEach((bid, index) => {
-                    console.log("Bid:", bid);
-                });
-
-                const size = bids.length;
-                document.getElementById("bidCount").textContent = size;
-
-                const bidList = document.getElementById("bidList");
-                bidList.innerHTML = "";
-                bids.slice().reverse().forEach(bid => {
-                    const li = document.createElement("li");
-                    const nowTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
-
-                    if (bid.user == 1) {
-                        li.innerHTML =
-                            `<div>
-                            <strong>User ${bid.user}</strong>
-                            <small className="text-muted ms-2">${bid.dateTime}</small>
-                        </div>
-                        <span className="text-success">$ ${bid.amount}</span>`
-                    }else if(bid.user == 2) {
-                        li.innerHTML =
-                            `<div>
-                           <strong>User ${bid.user}</strong>
-                           <small className="text-muted ms-2">${bid.dateTime}</small>
-                       </div>
-                       <span className="text-success">$ ${bid.amount}</span>`
-                    }else {
-                        li.innerHTML =
-                            `<div>
-                           <strong>User ${bid.user}</strong>
-                           <small className="text-muted ms-2">${bid.dateTime}</small>
-                       </div>
-                       <span className="text-success">$ ${bid.amount}</span>`
-                    }
-                    bidList.appendChild(li);
-                });
+                console.log(`Ignoring bid for product ${bid.itemId}, viewing ${productId}`);
+                return;
 
             }
 
+            //update current bid
+            const curremtBidElm = document.getElementById("maxBitAmount");
+            if (curremtBidElm) {
+                curremtBidElm.innerText = bid.amount;
+            }
+
+            //update bid history
+            const bidListElm = document.getElementById("bidList");
+            if (bidListElm) {
+                const li = document.createElement("li");
+                const nowTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+
+                li.innerHTML =`
+                <div>
+                    <strong>User ${bid.name}</strong>
+                    <small class="text-muted ms-2">${bid.dateTime || nowTime}</small>
+                </div>
+                <span class="text-success">$ ${bid.amount}</span>
+            `;
+
+                bidListElm.prepend(li);
+            }
+
+            //update suggested next bid
+            const minNext = document.getElementById("minimumNextBitAmount");
+            const input = document.getElementById("bidAmountInput");
+            if (minNext && input) {
+                const nextAmount = bid.amount + 50;
+                minNext.innerText = nextAmount;
+                input.value = nextAmount;
+            }
+
+        }catch (error) {
+            console.error("WebSocket message handling error:", error);
         }
 
     };
 
-    socket.onerror = (error) => {
-        console.error("WebSocket error:", error);
-    };
-
-    socket.onclose = () => {
-        console.log("WebSocket connection closed");
-    };
 }
 
 //placeBid
