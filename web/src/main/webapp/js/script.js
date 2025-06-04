@@ -98,10 +98,10 @@ async function loadProducts() {
                     <div class="card-body">
                         <h5 class="card-title">${product.name}</h5>
                         <div class="auction-meta">
-                            <span class="current-bid">Rs. ${product.maxBidPrice.toFixed(2)}</span>
+                            <span class="current-bid" id="currentBidHome">Rs. ${product.maxBidPrice.toFixed(2)}</span>
                             <span class="time-left">
-                  <i class="fas fa-clock me-1"></i>${getTimeLeft(product.date)}
-                </span>
+                                <i class="fas fa-clock me-1"></i>${getTimeLeft(product.date)}
+                            </span>
                         </div>
                         <div class="d-flex justify-content-between mb-3">
                             <small>Bids: ${product.bidderQty}</small>
@@ -121,6 +121,39 @@ async function loadProducts() {
         console.error("Error loading products:", error);
         alert("Failed to load products");
     }
+
+    //websocket home
+    const homeSocket = new WebSocket(`ws://${window.location.host}/ee-app/bidSocket`);
+
+    homeSocket.onopen = () => {
+        console.log("Connected to WebSocket on Home Page");
+    };
+
+    homeSocket.onmessage = (event) => {
+        try {
+            const bid = JSON.parse(event.data);
+            console.log("Message received:", bid);
+
+            const bidSpan = document.getElementById("currentBidHome");
+            if (bidSpan) {
+                bidSpan.innerHTML = `$. ${bid.amount.toFixed(2)}`;
+                console.log("Updated bid on home page: ", bid.amount);
+            }else {
+                console.log("Bid span not found");
+            }
+        }catch (err){
+            console.error("Error handling WebSocket message on Home Page:", err);
+        }
+    };
+
+    homeSocket.onerror = (error) => {
+        console.error("WebSocket error on Home Page:", error);
+    };
+
+    homeSocket.onclose = () => {
+        console.log("WebSocket connection closed on Home Page");
+    };
+
 }
 
 //load single product
@@ -262,3 +295,55 @@ async function placeBid(id){
     }
 }
 
+//autobid
+async function autobid(){
+    // alert("Autobid started");
+
+    const maxAmount = document.getElementById("autoBidMaxAmount").value.trim();
+    const productId = new URLSearchParams(window.location.search).get("id");
+
+    if (!maxAmount) {
+        alert("Please enter a valid bid amount");
+        return;
+    }
+
+    if (!productId) {
+        alert("Invalid product");
+        return;
+    }
+
+    const formData = new URLSearchParams();
+    formData.append("maxBid", maxAmount);
+    formData.append("productId", productId);
+
+    console.log("Max amount:", maxAmount);
+    console.log("Product id:", productId);
+
+    try {
+
+        const response = await fetch("/ee-app/autobid", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+
+            body: formData.toString()
+        });
+
+        console.log("Fetch response:", response);
+
+        if (response.ok) {
+            alert("Auto-bid successfully activated!");
+        } else {
+            const error = await response.text();
+            console.error("Server error:", error);
+            alert("Failed to start auto-bid.");
+        }
+
+
+    }catch (error) {
+        console.error("Error in autobid:", error);
+        alert("Failed to start autobid");
+    }
+
+}

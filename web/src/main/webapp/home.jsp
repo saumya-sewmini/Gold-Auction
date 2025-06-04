@@ -216,7 +216,7 @@
                 <div class="hero-text">
                     <h1>Exclusive Gold Jewelry Auctions</h1>
                     <p>Discover and bid on exquisite gold pieces in our real-time auctions. Own timeless treasures at competitive prices.</p>
-                    <a href="singleproductview.jsp" class="btn btn-auction">View Live Auctions</a>
+                    <a href="#" class="btn btn-auction">View Live Auctions</a>
                 </div>
             </div>
             <div class="col-lg-5">
@@ -287,5 +287,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/script.js"></script>
+
 </body>
 </html>

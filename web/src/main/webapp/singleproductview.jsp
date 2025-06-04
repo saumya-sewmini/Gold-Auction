@@ -329,6 +329,7 @@
           </div>
 
           <form id="autoBidForm">
+
             <div class="mb-4">
               <label class="form-label fw-bold">Maximum Bid Amount</label>
               <div class="input-group">
@@ -350,25 +351,17 @@
               <label class="form-label fw-bold">Bid Increment</label>
               <select class="form-select" id="autoBidIncrement" required>
                 <option value="50">$50</option>
-<%--                <option value="100">$100</option>--%>
-<%--                <option value="250">$250</option>--%>
-<%--                <option value="500">$500</option>--%>
               </select>
             </div>
 
-            <div class="form-check mb-4">
-              <input class="form-check-input" type="checkbox" id="autoBidTerms" required>
-              <label class="form-check-label" for="autoBidTerms">
-                I understand this will automatically place bids on my behalf
-              </label>
-            </div>
-
             <div class="d-grid">
-              <button type="submit" class="btn btn-gold py-3 fw-bold">
+              <button type="button" class="btn btn-gold py-3 fw-bold" onclick="autobid();">
                 <i class="fas fa-robot me-2"></i> Activate Auto-Bidding
               </button>
             </div>
+
           </form>
+
         </div>
       </div>
     </div>

@@ -8,13 +8,16 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lk.sau.ee.core.model.AutoBidModel;
 import lk.sau.ee.core.model.BidModel;
 import lk.sau.ee.core.model.UserModel;
+import lk.sau.ee.core.model.Validate;
 import lk.sau.ee.core.websocket.BidBroadcaster;
 import lk.sau.ee.ejb.remote.BidManagerRemote;
 import lk.sau.ee.ejb.remote.StoredDataRemote;
 
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/bid")
 public class BidServlet extends HttpServlet {
@@ -79,6 +82,28 @@ public class BidServlet extends HttpServlet {
             String bidJson = new Gson().toJson(bidModel);
             BidBroadcaster.broadcast(bidJson);
             System.out.println("Broadcasted bid to WebSocket: " + bidJson);
+
+            //auto bid
+            List<AutoBidModel> autoBidders = storedDataRemote.getAutoBidsForProduct(bidModel.getItemId());
+            for (AutoBidModel config : Validate.sortBidConfigs(autoBidders)){
+                if (bidModel.getUserId() == config.getUserId()) continue;
+
+                double nextBid = bidModel.getAmount() +50;
+
+                if (nextBid <= config.getMaxBid()){
+                    BidModel autoBid = new BidModel(config.getUserId(), bidModel.getItemId(), nextBid);
+                    bidManagerRemote.addBid(autoBid);
+                    System.out.println("Auto bid sent to memory");
+
+                    config.setLastBidPlaced(nextBid);
+
+                    String autoBidJson = new Gson().toJson(autoBid);
+                    BidBroadcaster.broadcast(autoBidJson);
+                    System.out.println("Broadcasted auto bid to WebSocket: " + autoBidJson);
+
+                    storedDataRemote.getProductById(bidModel.getItemId()).setMaxBidPrice(nextBid);
+                }
+            }
 
             //success response
             response.setStatus(HttpServletResponse.SC_OK);

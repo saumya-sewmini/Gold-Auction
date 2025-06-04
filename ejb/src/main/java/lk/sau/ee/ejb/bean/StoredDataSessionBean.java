@@ -3,6 +3,7 @@ package lk.sau.ee.ejb.bean;
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
+import lk.sau.ee.core.model.AutoBidModel;
 import lk.sau.ee.core.model.ProductModel;
 import lk.sau.ee.core.model.UserModel;
 import lk.sau.ee.ejb.remote.StoredDataRemote;
@@ -16,11 +17,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class StoredDataSessionBean implements StoredDataRemote {
     private List<UserModel> userModelList;
     private Map<Integer,ProductModel> productModelMap;
+    private ConcurrentHashMap<Integer,List<AutoBidModel>> autoBidMap;
 
     @PostConstruct
     public void init(){
         userModelList = new ArrayList<>();
         productModelMap = new HashMap<>();
+        autoBidMap = new ConcurrentHashMap<>();
 
         userModelList.add(new UserModel(1,"Saumya","sau@gmail.com","123456"));
         userModelList.add(new UserModel(2,"Sameera","sameera@gmail.com","123456"));
@@ -70,4 +73,22 @@ public class StoredDataSessionBean implements StoredDataRemote {
     public ProductModel getProductById(int id) {
         return productModelMap.get(id);
     }
+
+    @Override
+    public void registerAutoBid(AutoBidModel autoBid) {
+        autoBidMap
+                .computeIfAbsent(autoBid.getProductId(), k -> new ArrayList<>())
+                .add(autoBid);
+    }
+
+    @Override
+    public List<AutoBidModel> getAutoBidsForProduct(int productId) {
+        return autoBidMap.getOrDefault(productId, new ArrayList<>());
+    }
+
+    @Override
+    public void removeAutoBid(Integer productId, Integer userId) {
+        autoBidMap.getOrDefault(productId, new ArrayList<>()).removeIf(ab -> ab.getUserId() == userId);
+    }
+
 }
